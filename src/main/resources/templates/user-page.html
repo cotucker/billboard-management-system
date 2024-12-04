@@ -1,0 +1,183 @@
+<html
+        xmlns:th="https://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+<style>
+    .group-header {
+        background-color: #f0f0f0;
+        font-weight: bold;
+        text-align: left;
+    }
+</style>
+
+
+<head>
+    <title>User</title>
+</head>
+<div layout:fragment="navbar" class="collapse navbar-collapse" id="navbarSupportedContent" th:object="${user}">
+    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" th:href="@{/login}">Logout</a></li>
+    </ul>
+    <a class="navbar-brand ms-auto" th:text="${user.username}"></a>
+</div>
+<body class="d-flex flex-column h-100">
+
+<br>
+<div class="flex-container px-5">
+
+
+    <form id="userForm" role="form" method="post" th:action="@{/api/user/{userid}(userid=${user.id})}" th:object="${user}">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card text-white bg-primary mb-3" th:object="${deviceService}">
+                        <div class="card-header">Devices</div>
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <h4 class="card-title" th:text="${deviceService.getDeviceCountByOwnerId(user.id)}"></h4>
+                            <a class="btn btn-outline-light" th:href="@{/api/user/{userid}/devices(userid=${user.id})}" style="margin-top: -1px;">
+                                Edit Devices
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-black mb-3" th:object="${ads}">
+                        <div class="card-header">Files</div>
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <h4 class="card-title" th:text="${mediaFileService.countMediaFilesByOwnerId(user.id)}"></h4>
+                            <a class="btn btn-outline-light" th:href="@{/api/user/{userid}/files(userid=${user.id})}" style="margin-top: -1px;">
+                                Edit Files
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-black mb-3">
+                        <div class="card-header">Schedule</div>
+                        <div class="card-body">
+                            <a class="btn btn-outline-light"  th:href="@{/api/user/{userid}/schedule(userid=${user.id})}" style="margin-top: -1px;">
+                                Edit Schedule
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <table class="ui celled table">
+            <thead>
+            <tr>
+                <th style="width: 20%"></th>
+                <th style="width: 20%">Device Name</th>
+                <th style="width: 20%">Storage, GB</th>
+                <th style="width: 20%">Status</th>
+                <th style="width: 20%">Adds</th>
+            </tr>
+            </thead>
+
+            <tr  id="newDevice" th:object="${newDevice}">
+                <td>
+                </td>
+                <td><input type="text" id="name" name="name" placeholder="Enter name" class="form-control" th:field="*{name}"></td>
+                <td><input type="text" id="usedStorage" name="usedStorage" placeholder="Enter used storage" class="form-control" th:field="*{storageLimit}"></td>
+                <!--                <td><input type="text" id="status" name="status" placeholder="Enter status" class="form-control" th:field="*{status}"></td>-->
+                <td>
+                    <select class="form-control" id="status" name="status" type="text">
+                        <option value="ACTIVE" th:selected="${newDevice.status == 'ACTIVE'}">ACTIVE</option>
+                        <option value="INACTIVE" th:selected="${newDevice.status == 'INACTIVE'}">INACTIVE</option>
+                    </select>
+                </td>
+                <td><input type="text" placeholder="Ads count" class="form-control" disabled></td>
+                <td><button class="btn btn-dark" type="submit" id="submitBtn">Save/Group</button></td>
+            </tr>
+        </table>
+
+        <table class="ui celled table">
+            <thead>
+            <tr>
+                <th style="width: 20.5%"></th>
+                <th style="width: 4.5%"></th>
+                <th style="width: 15%"></th>
+                <th style="width: 20%"></th>
+                <th style="width: 20%"></th>
+                <th style="width: 20%"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="device : ${ungroupedDevices}">
+                <td>
+                </td>
+                <td>
+                    <input type="checkbox" name="selectedDevices" th:href="@{/device/{deviceid}(deviceid=${device.id})}" th:value="${device.id}" />
+                </td>
+                <td>
+                    <a class="text-decoration-none link-dark" th:href="@{/device/{deviceid}(deviceid=${device.id})}" th:text="${device.name}">Username</a>
+                </td>
+                <td>
+                    <a class="text-decoration-none link-dark" th:href="@{/device/{deviceid}(deviceid=${device.id})}" th:text="${mediaFileService.fileSizeToString(device.usedStorage)} + ' / ' + ${mediaFileService.fileSizeToString(device.storageLimit)}">Password</a>
+                </td>
+                <td>
+                    <a class="text-decoration-none link-dark" th:href="@{/device/{deviceid}(deviceid=${device.id})}" th:text="${device.status}">Role</a>
+                </td>
+                <td>
+                    <a class="text-decoration-none link-dark" th:href="@{/device/{deviceid}(deviceid=${device.id})}" th:text="${ads.getAdvertisementCountByDeviceId(device.id)}">Adds</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table class="ui celled table">
+            <thead>
+            <tr>
+                <th style="width: 20%"></th>
+                <th style="width: 80%"></th>
+            </tr>
+            </thead>
+            <tbody id="deviceTableBody">
+                <tr th:each="group : ${devicesGroupedByGroupNumber}">
+                    <td class="group-header">Group Number: <span th:text="${group.key}"></span></td>
+                    <td >
+
+                            <table class="ui celled table">
+                                <thead>
+                                <tr>
+                                    <th style="width: 5%"></th>
+                                    <th style="width: 20%"></th>
+                                    <th style="width: 25%"></th>
+                                    <th style="width: 25%"></th>
+                                    <th style="width: 25%"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="device : ${group.value}">
+                                    <td>
+                                        <input type="checkbox" name="selectedDevices" th:value="${device.id}" />
+                                    </td>
+                                    <td>
+                                        <a class="text-decoration-none link-dark" th:href="@{/device/{deviceid}(deviceid=${device.id})}" th:text="${device.name}">Username</a>
+                                    </td>
+                                    <td>
+                                        <a class="text-decoration-none link-dark" th:href="@{/device/{deviceid}(deviceid=${device.id})}" th:text="${mediaFileService.fileSizeToString(device.usedStorage)} + ' / ' + ${mediaFileService.fileSizeToString(device.storageLimit)}">Password</a>
+                                    </td>
+                                    <td>
+                                        <a class="text-decoration-none link-dark" th:href="@{/device/{deviceid}(deviceid=${device.id})}" th:text="${device.status}">Role</a>
+                                    </td>
+                                    <td>
+                                        <a class="text-decoration-none link-dark" th:href="@{/device/{deviceid}(deviceid=${device.id})}" th:text="${ads.getAdvertisementCountByDeviceId(device.id)}">Adds</a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+    <script>
+    </script>
+    <br>
+</div>
+
+</body>
+</html>

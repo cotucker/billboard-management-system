@@ -1,0 +1,55 @@
+<html
+        xmlns:th="https://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+<head>
+    <title>Login</title>
+</head>
+<div layout:fragment="label" class="container px-5">
+</div>
+    <style>
+        .flex-container {
+            width: 100%;
+            max-width: 500px;
+        }
+    </style>
+<body style="background-color: #000000; height: 100%;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;">
+    <main>
+
+        <div class="text-white text-lg-center" style="margin-bottom: 70px;font-size: 30px">
+            <a>billboard-management-system</a>
+        </div>
+
+        <div class="flex-container px-5 align-items-center" >
+
+            <form id="myForm" role="form" method="post" th:action="@{/register}" th:object="${user}">
+                <div id="inputForm">
+                    <div class="form-row">
+                        <div class="form-group col-md-10 form-text text-white">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control bg-black text-white" id="username" th:field="*{username}" name="username" placeholder="Username">
+                        </div>
+                        <div class="form-group col-md-10 form-text text-white">
+                            <label for="password">Password</label>
+                            <input type="text" class="form-control bg-black text-white" id="password" th:field="*{password}" name="password" placeholder="Password">
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" th:field="*{role}" value="CLIENT">
+                <button class="btn btn-outline-light" type="submit" style="margin-top: 20px;">
+                    Sign In
+                </button>
+                <button class="btn btn-primary btn-outline-light" type="submit" style="margin-top: 20px;">
+                    Sign Up
+                </button>
+            </form>
+
+        </div>
+
+    </main>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<html
+        xmlns:th="https://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+<style>
+</style>
+
+<head>
+    <title>User</title>
+</head>
+<div layout:fragment="navbar" class="collapse navbar-collapse" id="navbarSupportedContent">
+    <a th:href="@{/login}" class="navbar-brand ms-auto">Sign in</a>
+</div>
+<body class="d-flex flex-column h-100 " style="background-color: black">
+
+<br>
+<div class="flex-container px-5" style="    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;">
+    <div class="overflow-scroll border-light" style="height: 80%; width: 60%; border: 1px solid white; border-radius: 10px">
+        <table class="ui celled table table-borderless">
+            <tbody>
+            <tr th:each="device : ${ungroupedDevices}">
+                <td>
+                </td>
+                <td>
+                    <a class="text-decoration-none link-dark text-white" th:href="@{/device/{deviceid}(deviceid=${device.id})}" th:text="${device.name}">Username</a>
+                </td>
+                <td>
+                    <a class="text-decoration-none link-dark text-white" th:href="@{/device/{deviceid}(deviceid=${device.id})}" th:text="${mediaFileService.fileSizeToString(device.usedStorage)} + ' / ' + ${mediaFileService.fileSizeToString(device.storageLimit)}">Password</a>
+                </td>
+                <td>
+                    <a class="text-decoration-none link-dark text-white" th:href="@{/device/{deviceid}(deviceid=${device.id})}" th:text="${device.status}">Role</a>
+                </td>
+                <td>
+                    <a class="text-decoration-none link-dark text-white" th:href="@{/device/{deviceid}(deviceid=${device.id})}" th:text="${ads.getAdvertisementCountByDeviceId(device.id)}">Adds</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

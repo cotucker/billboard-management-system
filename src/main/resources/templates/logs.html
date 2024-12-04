@@ -1,0 +1,74 @@
+<html
+        xmlns:th="https://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+<style>
+
+</style>
+<script>
+</script>
+<meta http-equiv="refresh" content="10">
+<head>
+    <meta http-equiv="refresh" content="10">
+    <title>Users List</title>
+</head>
+
+<div layout:fragment="navbar" class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" th:href="@{/api/admin/users}">Main</a></li>
+    </ul>
+    <a class="navbar-brand ms-auto" href="index.html">Admin</a>
+</div>
+
+<body class="d-flex flex-column h-100">
+<main class="flex-shrink-0">
+    <section layout:fragment="body" class="py-5">
+        <div class="container px-5 my-5">
+            <div class="ui container">
+                <h2 class="fw-bold">User Logs</h2>
+                <form  id="myForm" role="form" method="post" th:action="@{/api/admin/users/logs}" th:object="${action}">
+                <button class="btn btn-primary" type="submit" style="margin-top: 20px;">
+                    Export logs
+                </button>
+                <div class="form-group col-md-10 form-text">
+                    <select class="btn btn-dark form-control-sm" id="action" name="action" type="text" th:placeholder="asddasd" style="margin-top: 20px;">
+                        <option value="" disabled selected>Filters</option>
+                        <option value="" th:selected="${action == ''}">NO_FILTER</option>
+                        <option value="NEW_SCHEDULE" th:selected="${action == 'NEW_SCHEDULE'}">NEW_SCHEDULE</option>
+                        <option value="EDIT_SCHEDULE" th:selected="${action == 'EDIT_SCHEDULE'}">EDIT_SCHEDULE</option>
+                        <option value="NEW_DEVICE" th:selected="${action == 'NEW_DEVICE'}">NEW_DEVICE</option>
+                        <option value="DELETE_DEVICE" th:selected="${action == 'DELETE_DEVICE'}">DELETE_DEVICE</option>
+                        <option value="NEW_USER" th:selected="${action == 'NEW_USER'}">NEW_USER</option>
+                    </select>
+                </div>
+                </form>
+                <table class="ui celled table">
+                    <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>User</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="log : ${logs}">
+                        <td>
+                            <a class="text-decoration-none link-dark" th:text="${log.timestamp}" th:href="@{/api/admin/users/{userid}(userid=${log.owner.id})}">Username</a>
+                        </td>
+                        <td>
+                            <a class="text-decoration-none link-dark" th:text="${log.owner.username}" th:href="@{/api/admin/users/{userid}(userid=${log.owner.id})}">Password</a>
+                        </td>
+                        <td>
+                            <a class="text-decoration-none link-dark" th:text="${log.action}" th:href="@{/api/admin/users/{userid}(userid=${log.owner.id})}">Role</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+
+
+</html>

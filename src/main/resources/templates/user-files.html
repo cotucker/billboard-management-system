@@ -1,0 +1,66 @@
+<html
+        xmlns:th="https://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+<style>
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<div layout:fragment="navbar" class="collapse navbar-collapse" id="navbarSupportedContent" th:object="${user}">
+    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" th:href="@{/api/user/{userid}(userid=${user.id})}">Main</a></li>
+    </ul>
+    <a class="navbar-brand ms-auto" th:text="${user.username}"></a>
+</div>
+
+
+<body class="d-flex flex-column h-100">
+<main class="flex-shrink-0">
+    <form  id="myForm" role="form" method="post" th:action="@{/api/user/{userid}/files(userid=${user.id})}" enctype="multipart/form-data">
+        <div class="ui container">
+            <br>
+            <div class="ui container">
+                <div class="input-group" style="width: 57%">
+                    <input type="file" name="files" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" multiple>
+                    <button class="btn btn-dark" type="submit" id="inputGroupFileAddon04">Upload</button>
+                </div>
+
+<!--                <button class="btn btn-primary" type="submit" style="margin-top: 10px">Upload</button>-->
+            </div>
+            <br>
+
+
+        <h2 class="fw-bold">File List</h2>
+            <button class="btn btn-danger" type="submit" style="margin-left: 450px">Delete Selected Files</button>
+        <table class="ui celled table" style="width: auto; margin-top: -30px;">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Size</th>
+            </tr>
+            </thead>
+            <tbody id="mediaFilesTableBody">
+            <tr th:each="file : ${files}">
+                <td>
+                    <input type="checkbox" name="selectedFiles" th:value="${file.id}" />
+                </td>
+                <td>
+                    <a class="text-decoration-none link-dark" th:text="${file.fileName}">Name</a>
+                </td>
+                <td>
+                    <a class="text-decoration-none link-dark" th:text="${fileService.fileSizeToString(file.fileSize)}">Size</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        </div>
+
+    </form>
+</main>
+</body>
+</html>

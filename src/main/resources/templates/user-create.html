@@ -1,0 +1,52 @@
+<html
+        xmlns:th="https://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layout}">
+<style>
+    .password-input {
+        -webkit-text-security: disc;
+    }
+</style>
+<script>
+
+</script>
+
+<head>
+    <title>User</title>
+</head>
+<body>
+
+<br>
+<div class="flex-container px-5">
+
+    <form id="myForm" role="form" method="post" th:action="@{/api/admin/users/create}" th:object="${user}">
+        <div id="inputForm">
+            <div class="form-row">
+                <div class="form-group col-md-10 form-text">
+                    <label for="username">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" th:field="*{username}" placeholder="Username">
+                </div>
+                <div class="form-group col-md-10 form-text">
+                    <label for="password">Password</label>
+                    <input type="text" class="form-control" id="password" name="password" th:field="*{password}" placeholder="Password">
+                </div>
+            </div>
+
+
+            <div class="form-group col-md-10 form-text">
+                <label for="role">Example select</label>
+                <select class="form-control" id="role" name="role" type="text">
+                    <option value="CLIENT" th:selected="${user.role == 'CLIENT'}">CLIENT</option>
+                    <option value="ADMIN" th:selected="${user.role == 'ADMIN'}">ADMIN</option>
+                </select>
+            </div>
+        </div>
+        <button class="btn btn-dark" type="submit" style="margin-top: 20px;">
+            Create User
+        </button>
+    </form>
+
+</div>
+
+</body>
+</html>

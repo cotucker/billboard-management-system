@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+#  app:
+#    build: .
+#    container_name: billboard-app
+#    depends_on:
+#      - postgres
+#      - mongodb
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/billboard-management-system
+#      - SPRING_DATASOURCE_USERNAME=postgres
+#      - SPRING_DATASOURCE_PASSWORD=postgres
+#      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/billboard_db
+#    ports:
+#      - "8080:8080"
+#    networks:
+#      - billboard-network
+
+  postgres:
+    image: postgres:14-alpine
+    container_name: billboard-postgres
+    environment:
+      - POSTGRES_DB=billboard_db
+      - POSTGRES_USER=billboard_user
+      - POSTGRES_PASSWORD=billboard_password
+    ports:
+      - "5432:5432"
+#    healthcheck:
+#      test: ["CMD-SHELL", "pg_isready -U billboard_user -d billboard_db"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+
+  mongodb:
+    image: mongo:latest
+    container_name: billboard-mongodb
+    environment:
+      - MONGO_INITDB_DATABASE=billboard_db
+    ports:
+      - "27017:27017"
+    command: mongod --bind_ip_all
+#    healthcheck:
+#      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/billboard_db --quiet
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+
+
+  mongo-express:
+    image: mongo-express
+    container_name: billboard-mongo-express
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_PORT=27017
+    ports:
+      - "8081:8081"
+#    depends_on:
+#      - mongodb
+
